@@ -22,5 +22,9 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-#Electron-builder output
-/dist_electron
+# Ignorar todo en dist_electron
+/dist_electron/*
+
+# Pero incluir los artefactos importantes
+!/dist_electron/*.exe
+!/dist_electron/*.yml
