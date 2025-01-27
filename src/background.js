@@ -113,7 +113,7 @@ async function createWindow() {
   } else {
     createProtocol("app");
     mainWindow.loadURL("app://./index.html");
-    autoUpdater.checkForUpdatesAndNotify();
+    configurarActualizaciones();
   }
 
   mainWindow.webContents.on("before-input-event", (event, input) => {
@@ -242,7 +242,9 @@ function createPortModal() {
       </body>
     </html>`);
 }
-
+ipcMain.on("restart_app", () => {
+  autoUpdater.quitAndInstall();
+});
 // ✅ Escuchar evento de cambio de puerto
 ipcMain.on("update-port", (event, newPort) => {
   if (newPort) {
@@ -254,3 +256,45 @@ ipcMain.on("update-port", (event, newPort) => {
     });
   }
 });
+
+function configurarActualizaciones() {
+  // Comprobar actualizaciones y notificar automáticamente
+  autoUpdater.checkForUpdatesAndNotify();
+
+  // Cuando hay una actualización disponible
+  autoUpdater.on("update-available", () => {
+    if (mainWindow) {
+      mainWindow.webContents.send("update_available");
+    }
+  });
+
+  // Cuando la actualización se ha descargado
+  autoUpdater.on("update-downloaded", () => {
+    if (mainWindow) {
+      mainWindow.webContents.send("update_downloaded");
+    }
+  });
+
+  // Manejo de errores durante la actualización
+  autoUpdater.on("error", (error) => {
+    if (mainWindow) {
+      mainWindow.webContents.send(
+        "update_error",
+        error.message || "Error desconocido"
+      );
+    }
+    console.error("❌ Error en autoUpdater:", error);
+  });
+
+  // Información adicional (opcional): progreso de la descarga
+  autoUpdater.on("download-progress", (progressObj) => {
+    if (mainWindow) {
+      const progressInfo = {
+        percent: progressObj.percent.toFixed(2),
+        transferred: progressObj.transferred,
+        total: progressObj.total,
+      };
+      mainWindow.webContents.send("update_progress", progressInfo);
+    }
+  });
+}

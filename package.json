@@ -2,7 +2,10 @@
   "name": "app_expr",
   "version": "1.0.2",
   "private": true,
-  "repository": "https://github.com/ivani1v2/Print_server",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ivani1v2/Print_server.git"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
