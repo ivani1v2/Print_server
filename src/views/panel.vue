@@ -5,7 +5,7 @@
                 <v-col cols="12" md="8">
                     <v-card>
                         <v-card-title class="headline justify-center">
-                            Lista de Impresoras 2
+                            Lista de Impresoras 3
                         </v-card-title>
                         <v-card-subtitle class="text-center">
                             Servidor: {{ serverIP }}:{{ serverPort }}
